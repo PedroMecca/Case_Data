@@ -13,13 +13,13 @@ function lerArquivo(filePath) { //Parametro para caminho do banco, no meu caso u
 
 
 function corrigirDados(dados) {
-    return dados.map(item => {
+    return dados.map(item => { // busca parametro dados, no caso o banco.
        
-        if (item.marca) item.marca = item.marca.replace(/æ/g, 'a').replace(/ø/g, 'o');
+        if (item.marca) item.marca = item.marca.replace(/æ/g, 'a').replace(/ø/g, 'o'); // identifica o campo no banco e usa um replace para trocar /æ/ e /ø/ para "a" e "o" respectivamente
         if (item.nome) item.nome = item.nome.replace(/æ/g, 'a').replace(/ø/g, 'o');
 
       
-        if (item.vendas && typeof item.vendas === 'string') {
+        if (item.vendas && typeof item.vendas === 'string') { // identifica campo vendas como exclusivamente Strings, usando 
             item.vendas = parseInt(item.vendas, 10);
         }
 
@@ -28,7 +28,7 @@ function corrigirDados(dados) {
 }
 
 
-function salvarArquivo(filePath, dados) {
+function salvarArquivo(filePath, dados) { // função para salvar arquivos, será usada abaixo no try/catch
     try {
         fs.writeFileSync(filePath, JSON.stringify(dados, null, 4), 'utf-8');
         console.log(`Arquivo corrigido salvo em: ${filePath}`);
@@ -38,13 +38,13 @@ function salvarArquivo(filePath, dados) {
     }
 }
 
+// variaveis 
+const caminhoArquivo1 = './broken_database_1.json';// banco1
+const caminhoArquivo2 = './broken_database_2.json'; //banco2
+const saidaArquivo1 = './corrigido_database_1.json'; //correção do banco 1
+const saidaArquivo2 = './corrigido_database_2.json';// correção do banco 2
 
-const caminhoArquivo1 = './broken_database_1.json';
-const caminhoArquivo2 = './broken_database_2.json';
-const saidaArquivo1 = './corrigido_database_1.json';
-const saidaArquivo2 = './corrigido_database_2.json';
-
-
+// função para criação dos arquivos
 try {
     const dados1 = lerArquivo(caminhoArquivo1);
     const dadosCorrigidos1 = corrigirDados(dados1);
