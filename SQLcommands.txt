@@ -1,0 +1,71 @@
+select * from corrigido_database_2
+
+select * from corrigido_database_1
+
+CREATE TABLE RelatorioVendas AS
+SELECT
+    c.c1,
+    c.c2,
+    c.c3,
+    c.c4,
+    c.c5
+FROM corrigido_database_1 c
+INNER JOIN corrigido_database_2 c2 ON (c.c2 = c2.c1);
+
+select * from RelatorioVendas
+
+-- 1 Qual marca teve o maior volume de vendas?
+SELECT c.c1 as data, c.c2 AS marca, MAX(c.c3) AS total_vendasvolume
+FROM RelatorioVendas c
+GROUP BY marca
+ORDER BY total_vendasvolume DESC
+LIMIT 1;
+
+-- 2Qual veículo gerou a maior e menor receita?
+SELECT c.c5 AS nome_veiculo, -- maior
+       (c.c3 * c.c4) AS maior_receita
+FROM RelatorioVendas c
+ORDER BY maior_receita DESC
+LIMIT 1;
+
+SELECT c.c5 AS nome_veiculo, --menor
+       (c.c3 * c.c4) AS menor_receita
+FROM RelatorioVendas c
+ORDER BY menor_receita ASC
+LIMIT 1;
+
+-- 3 Considere faixas de preço de venda dos carros a cada 10 mil reais. Qual faixa mais vendeu carros? Quantos?
+select c5, c4 from corrigido_database_1 where c4 > 
+
+SELECT 
+    (FLOOR(c.c4 / 10000) * 10000) || '-' || (FLOOR(c.c4 / 10000) * 10000 + 9999) AS faixa_preco,
+    SUM(c.c3) AS total_vendas
+FROM RelatorioVendas c
+GROUP BY faixa_preco
+ORDER BY total_vendas DESC
+LIMIT 1;
+
+-- 4 Qual a receita das 3 marcas que têm os menores tickets médios?
+WITH TicketMedio AS (
+    SELECT c.c2 AS marca,
+           SUM(c.c3) / COUNT(DISTINCT c.c1) AS ticket_medio,  
+           SUM(c.c3 * c.c4) AS receita_total  
+    FROM RelatorioVendas c
+    GROUP BY c.c2
+)
+SELECT marca, receita_total
+FROM TicketMedio
+ORDER BY ticket_medio ASC 
+LIMIT 3;
+
+
+
+
+
+
+
+
+
+
+
+
